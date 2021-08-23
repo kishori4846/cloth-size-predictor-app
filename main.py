@@ -19,6 +19,7 @@ def home():
 @app.route('/predict',methods=['POST'])
 
 def predict():
+    global x
     '''
     For rendering results on HTML GUI
     '''
@@ -26,11 +27,26 @@ def predict():
     final_features = [np.array(int_features)]
     prediction = model.predict(final_features)
 
-    output = int(prediction)
-
-    sizemap = { 1:'XXS', 2:'S', 3:'M', 4:"L", 5:"XL", 6:"XXL", 7:"XXXL"}
-    pred_size = sizemap.get(output)
+    o=round(prediction[0],2)
     
+    x=""
+    
+    if 0.01 <= o <= 2.55:
+        x="XXS"
+    elif 2.55 <= o <= 3.01:
+        x="S"
+    elif 3.01 <= o <= 3.55:
+        x="M"
+    elif 3.55 <= o <= 4.01:
+        x="XL"
+    elif 4.01 <= o <= 5.55:
+        x="XXL"
+    elif 5.55 <= o <= 9.01:
+        x="XXXL"
+    elif 9.01 <= o <= 10.01:
+        x="XXXXL"
+    elif 10.01 <= o <= 12.01:
+        x="5XL"
 
     return render_template('result.html', prediction_text='Your estimated clothing size is : {}'.format(pred_size))
     
